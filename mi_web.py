@@ -4,7 +4,7 @@ from PIL import Image
 import io
 
 # Configuración de página ancha
-st.set_page_config(page_title="Quitafondos Pro", page_icon="🎨", layout="wide")
+st.set_page_config(page_title="Quitafondos para toda la familia", layout="wide")
 
 # --- AQUÍ ESTÁ EL CAMBIO: EL BANNER ---
 try:
@@ -97,4 +97,5 @@ if uploaded_file is not None:
                     )
                 except Exception as e:
                     st.error(f"Error: {e}")
+
 
