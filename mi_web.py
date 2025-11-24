@@ -6,7 +6,7 @@ import io
 # Configuración de página ancha
 st.set_page_config(page_title="Quitafondos Pro", page_icon="🎨", layout="wide")
 
-st.title("🎨 Quitafondos Pro")
+st.title("Quitafondos fácil y sencillo")
 st.write("Sube tu imagen y personaliza el resultado.")
 
 # 1. Subir Imagen
@@ -87,3 +87,4 @@ if uploaded_file is not None:
                     )
                 except Exception as e:
                     st.error(f"Error: {e}")
+
