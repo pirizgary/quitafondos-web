@@ -18,7 +18,7 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 # -------------------------------------------------
 
 st.title(" Quitafondos gratuito")
-st.write("Sube una foto, elige un color y transforma tu imagen.")
+st.write("Sube una foto, quitale el fondo y si quieres agregale uno.")
 
 # 1. Subir Imagen
 uploaded_file = st.file_uploader("Elige una imagen (JPG, PNG)...", type=["jpg", "jpeg", "png"])
@@ -63,5 +63,6 @@ if uploaded_file is not None:
                 st.error(f"Ocurrió un error: {e}")
 
 # ... el resto de tu código ...
+
 
 
