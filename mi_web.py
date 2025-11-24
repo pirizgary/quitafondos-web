@@ -3,59 +3,10 @@ from rembg import remove
 from PIL import Image
 import io
 
-# Título y diseño
-st.set_page_config(page_title="Quitafondos", page_icon="✂️")
-st.title("✂️ Removedor de Fondos")
-st.write("Sube una foto y la Inteligencia Artificial hará el resto.")
+# Configuración básica de la página
+st.set_page_config(page_title="Editor de Fondos", page_icon="🎨")
 
-# Subir archivo
-uploaded_file = st.file_uploader("Elige una imagen (JPG o PNG)", type=["jpg", "jpeg", "png"])
-
-if uploaded_file is not None:
-    # 1. Mostrar la imagen original
-    image = Image.open(uploaded_file)
-    
-    # Creamos dos columnas para ver el "Antes" y "Después"
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.header("Original")
-        st.image(image, use_column_width=True)
-
-    with col2:
-        st.header("Sin Fondo")
-        
-        if st.button("✨ Quitar Fondo"):
-            with st.spinner('Procesando... (esto puede tardar unos segundos)'):
-                try:
-                    # AQUÍ SUCEDE LA MAGIA
-                    output = remove(image)
-                    
-                    # Mostramos el resultado
-                    st.image(output, use_column_width=True)
-                    
-                    # Preparamos la descarga
-                    # Convertimos la imagen a bytes en memoria (RAM)
-                    buf = io.BytesIO()
-                    output.save(buf, format="PNG")
-                    byte_im = buf.getvalue()
-                    
-                    # Botón de descarga
-                    st.download_button(
-                        label="⬇️ Descargar PNG",
-                        data=byte_im,
-                        file_name="imagen_sin_fondo.png",
-                        mime="image/png"
-                    )
-                except Exception as e:
-
-                    st.error(f"Hubo un error: {e}")
-
-
-
-# ... tus imports aquí ...
-
-# Configuración para esconder el menú y el pie de página
+# --- TRUCO CSS: OCULTAR MENÚS Y MARCAS DE AGUA ---
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
@@ -64,5 +15,52 @@ hide_st_style = """
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
+# -------------------------------------------------
+
+st.title("🎨 Quitafondos Profesional")
+st.write("Sube una foto, elige un color y transforma tu imagen.")
+
+# 1. Subir Imagen
+uploaded_file = st.file_uploader("Elige una imagen (JPG, PNG)...", type=["jpg", "jpeg", "png"])
+
+if uploaded_file is not None:
+    image = Image.open(uploaded_file)
+    
+    # Mostrar imagen original
+    st.image(image, caption='Imagen Original', use_column_width=True)
+    
+    st.write("---")
+    st.write("### ⚙️ Personalización")
+    
+    # 2. Selector de color
+    bg_color = st.color_picker("Elige el color de fondo:", "#FFFFFF")
+    
+    if st.button("✨ Procesar Imagen"):
+        with st.spinner('Trabajando en tu foto...'):
+            try:
+                # A. Quitar fondo
+                img_sin_fondo = remove(image)
+                
+                # B. Poner color nuevo
+                fondo_nuevo = Image.new("RGBA", img_sin_fondo.size, bg_color)
+                imagen_final = Image.alpha_composite(fondo_nuevo, img_sin_fondo)
+                
+                # C. Mostrar resultado
+                st.image(imagen_final, caption='Resultado Final', use_column_width=True)
+                
+                # D. Botón descarga
+                buf = io.BytesIO()
+                imagen_final.save(buf, format="PNG")
+                byte_im = buf.getvalue()
+                
+                st.download_button(
+                    label="⬇️ Descargar Imagen Lista",
+                    data=byte_im,
+                    file_name="foto_editada.png",
+                    mime="image/png"
+                )
+            except Exception as e:
+                st.error(f"Ocurrió un error: {e}")
 
 # ... el resto de tu código ...
+
