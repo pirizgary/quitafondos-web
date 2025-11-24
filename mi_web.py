@@ -8,6 +8,7 @@ st.set_page_config(page_title="Quitafondos Pro", page_icon="🎨", layout="wide"
 
 st.title("Quitafondos fácil y sencillo")
 st.write("Sube tu imagen y personaliza el resultado.")
+st.write("pd el diego se la come")
 
 # 1. Subir Imagen
 uploaded_file = st.file_uploader("Sube tu foto aquí...", type=["jpg", "jpeg", "png"])
@@ -87,4 +88,5 @@ if uploaded_file is not None:
                     )
                 except Exception as e:
                     st.error(f"Error: {e}")
+
 
