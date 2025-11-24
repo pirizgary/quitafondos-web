@@ -17,7 +17,7 @@ hide_st_style = """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 # -------------------------------------------------
 
-st.title("🎨 Quitafondos Profesional")
+st.title(" Quitafondos gratuito")
 st.write("Sube una foto, elige un color y transforma tu imagen.")
 
 # 1. Subir Imagen
@@ -63,4 +63,5 @@ if uploaded_file is not None:
                 st.error(f"Ocurrió un error: {e}")
 
 # ... el resto de tu código ...
+
 
