@@ -3,25 +3,13 @@ from rembg import remove
 from PIL import Image
 import io
 
-# Configuración básica de la página
-st.set_page_config(page_title="Editor de Fondos", page_icon="🎨")
+st.set_page_config(page_title="Quitafondos", page_icon="✂️")
 
-# --- TRUCO CSS: OCULTAR MENÚS Y MARCAS DE AGUA ---
-hide_st_style = """
-            <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            header {visibility: hidden;}
-            </style>
-            """
-st.markdown(hide_st_style, unsafe_allow_html=True)
-# -------------------------------------------------
-
-st.title(" Quitafondos gratuito")
-st.write("Sube una foto, quitale el fondo y si quieres agregale uno.")
+st.title("✂️ Quitafondos Mágico")
+st.write("Sube tu imagen y elige cómo quieres descargarla.")
 
 # 1. Subir Imagen
-uploaded_file = st.file_uploader("Elige una imagen (JPG, PNG)...", type=["jpg", "jpeg", "png"])
+uploaded_file = st.file_uploader("Elige una imagen...", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
@@ -30,39 +18,46 @@ if uploaded_file is not None:
     st.image(image, caption='Imagen Original', use_column_width=True)
     
     st.write("---")
-    st.write("### ⚙️ Personalización")
+    st.header("Configuración")
     
-    # 2. Selector de color
-    bg_color = st.color_picker("Elige el color de fondo:", "#FFFFFF")
+    # 2. PREGUNTA: ¿Qué tipo de fondo quieres?
+    opcion = st.radio(
+        "¿Cómo quieres el resultado final?",
+        ["Fondo Transparente (PNG)", "Fondo de Color"]
+    )
     
-    if st.button("✨ Procesar Imagen"):
-        with st.spinner('Trabajando en tu foto...'):
+    # Si elige color, mostramos el selector. Si no, lo ocultamos.
+    bg_color = None
+    if opcion == "Fondo de Color":
+        bg_color = st.color_picker("Elige el color:", "#00FF00")
+    
+    # 3. Botón de Procesar
+    if st.button("✨ Realizar Magia"):
+        with st.spinner('Procesando...'):
             try:
-                # A. Quitar fondo
-                img_sin_fondo = remove(image)
+                # A. Quitamos el fondo (siempre se hace esto primero)
+                img_procesada = remove(image)
                 
-                # B. Poner color nuevo
-                fondo_nuevo = Image.new("RGBA", img_sin_fondo.size, bg_color)
-                imagen_final = Image.alpha_composite(fondo_nuevo, img_sin_fondo)
+                # B. Si eligió color, hacemos la fusión
+                if opcion == "Fondo de Color" and bg_color:
+                    # Creamos un fondo sólido del color elegido
+                    fondo_nuevo = Image.new("RGBA", img_procesada.size, bg_color)
+                    # Pegamos la imagen sin fondo encima del color
+                    img_procesada = Image.alpha_composite(fondo_nuevo, img_procesada)
                 
                 # C. Mostrar resultado
-                st.image(imagen_final, caption='Resultado Final', use_column_width=True)
+                st.image(img_procesada, caption='Resultado Final', use_column_width=True)
                 
-                # D. Botón descarga
+                # D. Botón de descarga
                 buf = io.BytesIO()
-                imagen_final.save(buf, format="PNG")
+                img_procesada.save(buf, format="PNG")
                 byte_im = buf.getvalue()
                 
                 st.download_button(
-                    label="⬇️ Descargar Imagen Lista",
+                    label="⬇️ Descargar Imagen",
                     data=byte_im,
-                    file_name="foto_editada.png",
+                    file_name="resultado.png",
                     mime="image/png"
                 )
             except Exception as e:
-                st.error(f"Ocurrió un error: {e}")
-
-# ... el resto de tu código ...
-
-
-
+                st.error(f"Hubo un error: {e}")
