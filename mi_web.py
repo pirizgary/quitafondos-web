@@ -18,7 +18,7 @@ except FileNotFoundError:
     st.warning("⚠️ No se encontró la imagen 'banner.png' en GitHub.")
 # --------------------------------------
 
-st.title("🎨 Quitafondos Pro")
+st.title("quitafondos fácil y sencillo")
 st.write("Sube tu imagen y personaliza el resultado.")
 
 # 1. Subir Imagen
@@ -97,3 +97,4 @@ if uploaded_file is not None:
                     )
                 except Exception as e:
                     st.error(f"Error: {e}")
+
