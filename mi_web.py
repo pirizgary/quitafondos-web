@@ -48,4 +48,21 @@ if uploaded_file is not None:
                         mime="image/png"
                     )
                 except Exception as e:
+
                     st.error(f"Hubo un error: {e}")
+
+
+
+# ... tus imports aquí ...
+
+# Configuración para esconder el menú y el pie de página
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
+# ... el resto de tu código ...
