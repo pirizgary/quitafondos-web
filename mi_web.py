@@ -6,9 +6,20 @@ import io
 # Configuración de página ancha
 st.set_page_config(page_title="Quitafondos Pro", page_icon="🎨", layout="wide")
 
-st.title("Quitafondos fácil y sencillo")
+# --- AQUÍ ESTÁ EL CAMBIO: EL BANNER ---
+try:
+    # 1. Cargar la imagen (Asegúrate que el nombre coincida EXACTO con el de GitHub)
+    banner_image = Image.open("banner.png") 
+    
+    # 2. Mostrarla (use_column_width=True hace que ocupe todo el ancho)
+    st.image(banner_image, use_column_width=True)
+except FileNotFoundError:
+    # Si te olvidaste de subir la imagen, no se rompe la página, solo muestra un aviso discreto.
+    st.warning("⚠️ No se encontró la imagen 'banner.png' en GitHub.")
+# --------------------------------------
+
+st.title("🎨 Quitafondos Pro")
 st.write("Sube tu imagen y personaliza el resultado.")
-st.write("pd el diego se la come")
 
 # 1. Subir Imagen
 uploaded_file = st.file_uploader("Sube tu foto aquí...", type=["jpg", "jpeg", "png"])
@@ -37,7 +48,7 @@ if uploaded_file is not None:
         bg_color = None # Variable vacía por defecto
         
         if modo == "Color Sólido":
-            # LISTA DE COLORES PREDEFINIDOS (Más intuitivo)
+            # LISTA DE COLORES PREDEFINIDOS
             opciones_color = {
                 "Blanco ⚪": "#FFFFFF",
                 "Negro ⚫": "#000000",
@@ -48,16 +59,14 @@ if uploaded_file is not None:
                 "Otro / Personalizado 🎨": "custom"
             }
             
-            # El usuario elige de la lista
             seleccion = st.selectbox("Elige un color rápido:", list(opciones_color.keys()))
             
-            # Lógica para definir el color final
             if opciones_color[seleccion] == "custom":
                 bg_color = st.color_picker("Toca el recuadro para elegir color exacto:", "#5200FF")
             else:
                 bg_color = opciones_color[seleccion]
         
-        st.write("---") # Línea separadora
+        st.write("---")
         
         # Botón de Procesar
         if st.button("🚀 PROCESAR IMAGEN", type="primary"):
@@ -71,7 +80,7 @@ if uploaded_file is not None:
                         fondo_nuevo = Image.new("RGBA", img_procesada.size, bg_color)
                         img_procesada = Image.alpha_composite(fondo_nuevo, img_procesada)
                     
-                    # C. Mostrar resultado ahí mismo
+                    # C. Mostrar resultado
                     st.success("¡Imagen lista!")
                     st.image(img_procesada, caption='Resultado', use_column_width=True)
                     
@@ -88,5 +97,3 @@ if uploaded_file is not None:
                     )
                 except Exception as e:
                     st.error(f"Error: {e}")
-
-
